@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="https://www.thymeleaf.org"
+      th:replace="~{fragments/layouts/base :: layout(~{::title}, ~{::section}, ~{})}">
+    <head>
+        <title th:text="#{html.index.title}"></title>
+    </head>
+    <body>
+        <section>
+            <h1 class="h3 mb-2 text-gray-800 mt-4" th:utext="#{html.index.header}"></h1>
+            <p class="mb-2 text-center"><img class="img-fluid px-4 px-sm-4 mt-3 mb-4" style="width: 25rem;" src="svg/undraw_pitching.svg" alt=""></p>
+            <p class="mb-1 text-center" th:text="#{html.index.p.first}"></p>
+            <p class="mb-1 text-center" th:text="#{html.index.p.second}"></p>
+
+            <div class="row mt-4">
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card border-left-primary shadow-sm h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1" th:text="#{html.index.box.projects}"></div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800" th:text="${totalProjects}">0</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-project-diagram fa-2x text-gray-300"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card border-left-info shadow-sm h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1" th:text="#{html.index.box.members}"></div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800" th:text="${totalMembers}">0</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-users fa-2x text-gray-300"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card border-left-danger shadow-sm h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1" th:text="#{html.index.box.tasks}"></div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800" th:text="${totalTasks}">0</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-tasks fa-2x text-gray-300"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card border-left-warning shadow-sm h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1" th:text="#{html.index.box.comments}"></div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800" th:text="${totalComments}">0</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-comments fa-2x text-gray-300"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </body>
+</html>

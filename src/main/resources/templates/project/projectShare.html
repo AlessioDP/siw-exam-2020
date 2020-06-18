@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="https://www.thymeleaf.org"
+      th:replace="~{fragments/layouts/base :: layout(~{::title}, ~{::section}, ~{})}">
+<head>
+    <title th:text="#{html.project.share.title(${project.getName()})}"></title>
+</head>
+<body>
+<section>
+    <div class="d-sm-flex align-items-center justify-content-between mb-4 mt-4">
+        <h1 class="h3 mb-0 text-gray-800" th:text="#{html.project.share.header(${project.getName()})}"></h1>
+        <div class="btn-group">
+            <a th:href="@{|/project/${project.getId()}/|}" class="d-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-chevron-left fa-sm text-white-50"></i> <span th:text="#{html.project.share.back}"></span></a>
+        </div>
+    </div>
+
+    <div th:if="${error}" class="alert alert-danger" th:text="#{${error}}"></div>
+    <div th:if="${result}" class="alert alert-info" th:text="#{${result}}"></div>
+
+    <form th:action="@{|/project/${project.getId()}/share/add|}" method="post">
+        <h2 th:text="#{html.project.share.add.title}"></h2>
+        <div class="form-group">
+            <label for="username" th:text="#{html.forms.username}"></label>
+            <input type="text" class="form-control" name="username" id="username" th:placeholder="#{html.forms.username}">
+        </div>
+        <button type="submit" class="btn btn-primary" th:text="#{html.project.share.add.submit}"></button>
+    </form>
+
+    <form th:action="@{|/project/${project.getId()}/share/remove|}" method="post">
+        <h2 class="mt-4" th:text="#{html.project.share.remove.title}"></h2>
+        <div class="form-group">
+            <label for="userId" th:text="#{html.forms.username}"></label>
+            <select class="custom-select" name="userId" id="userId">
+                <option th:each="member : ${members}" th:value="${member.getId()}" th:text="${member.getUserName()}"></option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary" th:text="#{html.project.share.remove.submit}"></button>
+    </form>
+</section>
+</body>
+</html>

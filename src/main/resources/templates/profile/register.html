@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="https://www.thymeleaf.org"
+      th:replace="~{fragments/layouts/login :: layout(~{::title}, ~{::section}, ~{::scripts})}">
+<head>
+    <title th:text="#{html.register.title}"></title>
+</head>
+<body>
+<section class="p-5">
+    <div class="text-center">
+        <h1 class="h4 text-gray-900 mb-4" th:text="#{html.register.header}"></h1>
+    </div>
+    <div class="alert alert-success" th:if="${registered}">
+        <span th:text="#{html.register.registered}"></span> <a th:href="@{/}" th:text="#{html.register.backhomepage}"></a>
+    </div>
+    <div th:if="!${registered}">
+        <form class="user" th:action="@{/register}" method="post">
+            <div class="form-group">
+                <input type="text" class="form-control form-control-user" name="username" th:field="${credentialsForm.userName}" th:placeholder="#{html.forms.username}" required>
+                <div class="alert alert-danger" th:if="${#fields.hasErrors('credentialsForm.userName')}" th:errors="${credentialsForm.userName}"></div>
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control form-control-user" name="firstName" th:field="${userForm.firstName}" th:placeholder="#{html.forms.firstName}">
+                <div class="alert alert-danger" th:if="${#fields.hasErrors('userForm.firstName')}" th:errors="${userForm.firstName}"></div>
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control form-control-user" name="lastName" th:field="${userForm.lastName}" th:placeholder="#{html.forms.lastName}">
+                <div class="alert alert-danger" th:if="${#fields.hasErrors('userForm.lastName')}" th:errors="${userForm.lastName}"></div>
+            </div>
+            <div class="form-group">
+                <input type="password" class="form-control form-control-user" id="password" name="password" th:field="${credentialsForm.password}" th:placeholder="#{html.forms.password}" required>
+                <div class="alert alert-danger" th:if="${#fields.hasErrors('credentialsForm.password')}" th:errors="${credentialsForm.password}"></div>
+            </div>
+            <div class="form-group">
+                <input type="password" class="form-control form-control-user" id="confirmPassword" th:placeholder="#{html.forms.confirmPassword}" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-user btn-block" th:text="#{html.register.submit}"></button>
+        </form>
+        <hr>
+        <div class="text-center">
+            <a th:href="@{/login}" th:text="#{html.register.alreadymember}"></a>
+            <br><br>
+            <a th:href="@{/}" th:text="#{html.register.backhomepage}"></a>
+        </div>
+    </div>
+</section>
+<th:block th:fragment="scripts">
+    <script>
+        $('#password, #confirmPassword').on('keyup', function () {
+            if ($('#password').val() == $('#confirmPassword').val()) {
+                $('#confirmPassword').css('border-color', 'green');
+            } else
+                $('#confirmPassword').css('border-color', 'red');
+        });
+    </script>
+</th:block>
+</body>
+</html>

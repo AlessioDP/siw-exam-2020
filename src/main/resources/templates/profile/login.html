@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="https://www.thymeleaf.org"
+      th:replace="~{fragments/layouts/login :: layout(~{::title}, ~{::section}, ~{})}">
+<head>
+    <title th:text="#{html.login.title}"></title>
+</head>
+<body>
+<section class="p-5">
+    <div class="text-center">
+        <h1 class="h4 text-gray-900 mb-4" th:text="#{html.login.header}"></h1>
+    </div>
+    <div th:if="${param.error}" class="alert alert-danger" th:text="#{html.login.error}"></div>
+    <div th:if="${param.logout}" class="alert alert-info" th:text="#{html.login.logout}"></div>
+
+    <th:block sec:authorize="isAuthenticated()">
+        <p class="text-center" th:text="#{html.login.welcome(${visitor.getUser().getFirstName()}, ${visitor.getUser().getLastName()})}"></p>
+    </th:block>
+    <th:block sec:authorize="isAnonymous()">
+        <form class="user" th:action="@{/login}" method="post">
+            <div class="form-group">
+                <input type="text" class="form-control form-control-user" name="username" th:placeholder="#{html.forms.username}">
+            </div>
+            <div class="form-group">
+                <input type="password" class="form-control form-control-user" name="password" th:placeholder="#{html.forms.password}">
+            </div>
+            <button type="submit" class="btn btn-primary btn-user btn-block" th:text="#{html.login.submit}"></button>
+        </form>
+        <hr>
+        <div class="text-center">
+            <a th:href="@{/register}" th:text="#{html.login.notmember}"></a>
+            <br><br>
+            <a th:href="@{/}" th:text="#{html.login.backhomepage}"></a>
+        </div>
+    </th:block>
+</section>
+</body>
+</html>

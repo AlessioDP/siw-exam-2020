@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="https://www.thymeleaf.org"
+      th:fragment="layout (title, content, scripts)">
+<head>
+    <th:block th:replace="fragments/header :: headerStart"></th:block>
+
+    <title th:replace="${title}">Title</title>
+
+    <th:block th:replace="fragments/header :: headerEnd"></th:block>
+</head>
+<body class="bg-gradient-primary">
+    <div id="container">
+        <div class="row justify-content-center mr-1 ml-1">
+            <div class="col-sm-10 col-md-7 col-lg-6 col-xl-3">
+                <div class="card o-hidden border-0 shadow-lg my-5">
+                    <div class="card-body p-0">
+                        <div class="row">
+                            <div class="col-12">
+                                <div th:replace="${content}">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <th:block th:replace="fragments/body :: bodyEnd"></th:block>
+
+    <th:block th:replace="${scripts}"></th:block>
+</body>
+</html>

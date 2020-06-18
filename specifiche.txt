@@ -1,0 +1,43 @@
+Casi d'Uso:
+
+1) User:
+- Signup
+- Signin
+- Show my profile page
+- Edit my profile page
+- Show other profile pages
+
+2) Project:
+- Create a new project
+- Delete own projects
+- Show owned projects
+- Show shared projects
+- Edit project info
+- Share/unshare project to another user
+- Add tags to the project
+- Remove tags from the project
+
+3) Tasks
+- Create a task
+- Delete a task
+- The task must be assigned to a single project
+- Assign/unassign a tag to the task
+- Add/remove a comment to the tag
+- Tasks are visible only by admins/owners/shared users of the project
+- Tasks can be assigned to owners/shared users of the project
+
+4) Comments
+- Project owners and shared users can write comments in tasks
+- Project owners can delete comments
+
+5) General
+- Shows all projects (/projects)
+- Shows all users (/users)
+- Admin panel (/admin)
+- - Only admins can access this page
+- - The page will show up: projects, users, tasks, tags and comments
+- Only signed users:
+- - Only read info of visible projects (must be owner or shared user)
+- - Open only tasks that are assigned to visible projects
+- - Shared users only see tags when assigned to tasks
+- - Admin/owners see all tags of a project

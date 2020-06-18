@@ -1,0 +1,54 @@
+.btn-github {
+    color: #fff;
+    background-color: #6f6f6f;
+    border-color: #fff;
+}
+
+ul.member-list .list-inline-item:not(:last-child) {
+    margin-right: 0;
+}
+ul.member-list .list-inline-item:not(:last-child):not(:first-child)::after {
+    content: ',';
+}
+
+.badge-bigger {
+    font-size: 1em;
+}
+
+/* Tables */
+.table th {
+    border-top: 0;
+}
+.css-table {
+    display: table;
+    width: 100%;
+}
+
+.css-table-header {
+    display: table-header-group;
+}
+
+.css-table-body {
+    display: table-row-group;
+}
+
+.css-table-rowgroup {
+    display: table-row-group;
+}
+
+.css-table-row {
+    display: table-row;
+}
+
+.css-table-header div,
+.css-table-row div {
+    display: table-cell;
+    padding: .75rem;
+    vertical-align: top;
+    border-top: 1px solid #dee2e6;
+}
+
+.css-table-header div {
+    vertical-align: bottom;
+    border-bottom: 2px solid #dee2e6;
+}

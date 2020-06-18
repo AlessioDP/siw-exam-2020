@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="https://www.thymeleaf.org"
+      th:replace="~{fragments/layouts/base :: layout(~{::title}, ~{::section}, ~{})}">
+<head>
+    <title>Error - SIW Exam 2020</title>
+</head>
+<body>
+<section>
+    <div class="container-fluid">
+
+        <div class="text-center">
+            <div class="error mx-auto">404</div>
+            <p class="lead text-gray-800 mb-5">Page not Found</p>
+            <a th:href="@{/}">← Back to Homepage</a>
+        </div>
+
+    </div>
+</section>
+</body>
+</html>

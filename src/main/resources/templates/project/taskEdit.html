@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="https://www.thymeleaf.org"
+      th:replace="~{fragments/layouts/base :: layout(~{::title}, ~{::section}, ~{})}">
+<head>
+    <title th:text="${editing} ? #{html.project.task.edit.title(${task.getName()})} : #{html.project.task.edit.title.create}"></title>
+</head>
+<body>
+<section>
+    <div class="d-sm-flex align-items-center justify-content-between mb-4 mt-4">
+        <h1 class="h3 mb-0 text-gray-800" th:text="${editing} ? #{html.project.task.edit.header(${task.getName()})} : #{html.project.task.edit.header.create}"></h1>
+        <div class="btn-group" th:if="${editing}">
+            <a th:href="@{|/project/${project.getId()}/|}" class="d-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-arrow-left fa-sm text-white-50"></i> <span th:text="#{html.project.edit.back}"></span></a>
+        </div>
+    </div>
+
+    <form th:action="${editing} ?  @{|/project/${project.getId()}/task/${task.getId()}/edit|} : @{|/project/${project.getId()}/task/create|}" method="post">
+        <div class="form-group">
+            <label for="name" th:text="#{html.forms.name}"></label>
+            <input type="text" class="form-control" id="name" name="name" th:field="${taskForm.name}" th:placeholder="#{html.forms.name}">
+            <div class="alert alert-danger" th:if="${#fields.hasErrors('taskForm.name')}" th:errors="${taskForm.name}"></div>
+        </div>
+        <div class="form-group">
+            <label for="description" th:text="#{html.forms.description}"></label>
+            <input type="text" class="form-control" id="description" name="description" th:field="${taskForm.description}" th:placeholder="#{html.forms.description}">
+            <div class="alert alert-danger" th:if="${#fields.hasErrors('taskForm.description')}" th:errors="${taskForm.description}"></div>
+        </div>
+        <div class="form-group">
+            <label for="assigned" th:text="#{html.forms.assignedTo}"></label>
+            <select class="custom-select" name="assigned" id="assigned">
+                <option value="0" th:selected="!${task.getUser()}">-</option>
+                <option th:each="member : ${members}" th:value="${member.getId()}" th:text="${member.getUserName()}" th:selected="${editing}? (${task.getUser()}? ${task.getUser().equals(member.getUser())})"></option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary" th:text="${editing} ? #{html.project.task.edit.submit.save} : #{html.project.task.edit.submit.create}"></button>
+    </form>
+
+    <div if="${editing}" class="mt-4">
+        <div th:if="${error}" class="alert alert-danger" th:text="#{${error}}"></div>
+        <div th:if="${result}" class="alert alert-info" th:text="#{${result}}"></div>
+
+        <form th:action="@{|/project/${project.getId()}/task/${task.getId()}/assignTag|}" method="post">
+            <h4 th:text="#{html.project.task.edit.tag.assign.title}"></h4>
+            <div class="form-group">
+                <label for="assignedTag" th:text="#{html.forms.tags}"></label>
+                <select class="custom-select" name="assignedTag" id="assignedTag">
+                    <option th:each="tag : ${project.getTags()}" th:if="!${task.getTags().contains(tag)}" th:value="${tag.getId()}" th:text="${tag.getName()}"></option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary" th:text="#{html.project.task.edit.tag.assign.submit}"></button>
+        </form>
+
+        <form th:action="@{|/project/${project.getId()}/task/${task.getId()}/unassignTag|}" method="post">
+            <h4 class="mt-4" th:text="#{html.project.task.edit.tag.unassign.title}"></h4>
+            <div class="form-group">
+                <label for="unassignedTag" th:text="#{html.forms.tags}"></label>
+                <select class="custom-select" name="unassignedTag" id="unassignedTag">
+                    <option th:each="tag : ${task.getTags()}" th:value="${tag.getId()}" th:text="${tag.getName()}"></option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary" th:text="#{html.project.task.edit.tag.unassign.submit}"></button>
+        </form>
+    </div>
+</section>
+</body>
+</html>

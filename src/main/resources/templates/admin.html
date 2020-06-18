@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="https://www.thymeleaf.org"
+      th:replace="~{fragments/layouts/base :: layout(~{::title}, ~{::section}, ~{})}">
+<head>
+    <title th:text="#{html.admin.title}"></title>
+</head>
+<body>
+<section>
+    <h1 class="h3 mb-2 text-gray-800 mt-4 mb-4" th:text="#{html.admin.header}"></h1>
+
+    <div class="row">
+        <div class="col-12 col-lg-6">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary" th:text="#{html.admin.box.projects}"></h6>
+                </div>
+                <div class="card-body">
+                    <div class="card-text">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" th:text="#{html.forms.name}"></th>
+                                        <th scope="col" th:text="#{html.forms.description}"></th>
+                                        <th scope="col" th:text="#{html.forms.tasks}"></th>
+                                        <th scope="col" th:text="#{html.forms.operations}"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:if="${projects.size()} == 0">
+                                        <td th:text="#{html.misc.none}"></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr th:each="proj : ${projects}" role="row">
+                                        <td><a th:href="@{|/project/${proj.getId()}/|}" th:text="${proj.getName()}"></a></td>
+                                        <td th:text="${proj.getDescription()}"></td>
+                                        <td th:text="${proj.getTasks().size()}"></td>
+                                        <td>
+                                            <a class="btn btn-primary btn-sm" th:href="@{|/project/${proj.getId()}/edit|}" th:text="#{html.misc.edit}"></a>
+                                            <a class="btn btn-secondary btn-sm" th:href="@{|/project/${proj.getId()}/delete|}" th:text="#{html.misc.delete}"></a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-lg-6">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary" th:text="#{html.admin.box.users}"></h6>
+                </div>
+                <div class="card-body">
+                    <div class="card-text">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th scope="col" th:text="#{html.forms.username}"></th>
+                                    <th scope="col" th:text="#{html.forms.firstName}"></th>
+                                    <th scope="col" th:text="#{html.forms.lastName}"></th>
+                                    <th scope="col" th:text="#{html.forms.operations}"></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:if="${credentials.size()} == 0">
+                                    <td th:text="#{html.misc.none}"></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr th:each="cred : ${credentials}" role="row">
+                                    <td><a th:href="@{|/profile/${cred.getUserName()}/|}" th:text="${cred.getUserName()}"></a></td>
+                                    <td th:text="${cred.getUser().getFirstName()}"></td>
+                                    <td th:text="${cred.getUser().getLastName()}"></td>
+                                    <td>
+                                        <a class="btn btn-primary btn-sm" th:href="@{|/profile/${cred.getUserName()}/edit|}" th:text="#{html.misc.edit}"></a>
+                                        <a class="btn btn-secondary btn-sm" th:href="@{|/profile/${cred.getUserName()}/delete|}" th:text="#{html.misc.delete}"></a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 col-lg-6">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary" th:text="#{html.admin.box.tasks}"></h6>
+                </div>
+                <div class="card-body">
+                    <div class="card-text">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th scope="col" th:text="#{html.forms.name}"></th>
+                                    <th scope="col" th:text="#{html.forms.description}"></th>
+                                    <th scope="col" th:text="#{html.forms.operations}"></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:if="${tasks.size()} == 0">
+                                    <td th:text="#{html.misc.none}"></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr th:each="task : ${tasks}" role="row">
+                                    <td><a th:href="@{|/project/${task.getProject().getId()}/task/${task.getId()}/|}" th:text="${task.getName()}"></a></td>
+                                    <td th:text="${task.getDescription()}"></td>
+                                    <td>
+                                        <a class="btn btn-primary btn-sm" th:href="@{|/project/${task.getProject().getId()}/task/${task.getId()}/edit|}" th:text="#{html.misc.edit}"></a>
+                                        <a class="btn btn-secondary btn-sm" th:href="@{|/project/${task.getProject().getId()}/task/${task.getId()}/delete|}" th:text="#{html.misc.delete}"></a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-lg-6">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary" th:text="#{html.admin.box.tags}"></h6>
+                </div>
+                <div class="card-body">
+                    <div class="card-text">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th scope="col" th:text="#{html.forms.tag}"></th>
+                                    <th scope="col" th:text="#{html.forms.description}"></th>
+                                    <th scope="col" th:text="#{html.forms.project}"></th>
+                                    <th scope="col" th:text="#{html.forms.operations}"></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:if="${tags.size()} == 0">
+                                    <td th:text="#{html.misc.none}"></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr th:each="tag : ${tags}" role="row">
+                                    <td th:text="${tag.getName()}"></td>
+                                    <td th:text="${tag.getDescription()}"></td>
+                                    <td><a th:href="@{|/project/${tag.getProject().getId()}/|}" th:text="${tag.getProject().getName()}"></a></td>
+                                    <td>
+                                        <a class="btn btn-primary btn-sm" th:href="@{|/project/${tag.getProject().getId()}/tag/${tag.getId()}/edit|}" th:text="#{html.misc.edit}"></a>
+                                        <a class="btn btn-secondary btn-sm" th:href="@{|/project/${tag.getProject().getId()}/tag/${tag.getId()}/delete|}" th:text="#{html.misc.delete}"></a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 col-lg-6">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary" th:text="#{html.admin.box.comments}"></h6>
+                </div>
+                <div class="card-body">
+                    <div class="card-text">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th scope="col" th:text="#{html.forms.comment}"></th>
+                                    <th scope="col" th:text="#{html.forms.task}"></th>
+                                    <th scope="col" th:text="#{html.forms.project}"></th>
+                                    <th scope="col" th:text="#{html.forms.operations}"></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:if="${comments.size()} == 0">
+                                    <td th:text="#{html.misc.none}"></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr th:each="comment : ${comments}" role="row">
+                                    <td><a th:href="@{|/project/${comment.getTask().getProject().getId()}/task/${comment.getTask().getId()}/|}" th:text="${comment.getText()}"></a></td>
+                                    <td><a th:href="@{|/project/${comment.getTask().getProject().getId()}/task/${comment.getTask().getId()}/|}" th:text="${comment.getTask().getName()}"></a></td>
+                                    <td><a th:href="@{|/project/${comment.getTask().getProject().getId()}/|}" th:text="${comment.getTask().getProject().getName()}"></a></td>
+                                    <td>
+                                        <a class="btn btn-primary btn-sm" th:href="@{|/project/${comment.getTask().getProject().getId()}/task/${comment.getTask().getId()}/comment/${comment.getId()}/delete|}" th:text="#{html.misc.delete}"></a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+</body>
+</html>

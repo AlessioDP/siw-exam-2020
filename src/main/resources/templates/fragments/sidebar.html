@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <body>
+        <div th:fragment="brand">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" th:href="@{/}">
+                <div class="sidebar-brand-icon rotate-n-15">
+                    <i class="fas fa-project-diagram"></i>
+                </div>
+                <div class="sidebar-brand-text mx-3">Projects<sup>SIW</sup></div>
+            </a>
+        </div>
+
+        <ul th:fragment="sidebar" class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+            <th:block th:replace="this :: brand"></th:block>
+
+            <hr class="sidebar-divider my-0">
+
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/}">
+                    <i class="fas fa-fw fa-home"></i>
+                    <span th:text="#{html.sidebar.link.homepage}"></span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/projects}">
+                    <i class="fas fa-fw fa-project-diagram"></i>
+                    <span th:text="#{html.sidebar.link.projects}"></span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/users}">
+                    <i class="fas fa-fw fa-users"></i>
+                    <span th:text="#{html.sidebar.link.users}"></span>
+                </a>
+            </li>
+
+            <th:block sec:authorize="isAuthenticated()">
+                <hr class="sidebar-divider">
+
+                <div class="sidebar-heading" th:text="#{html.sidebar.header.user}"></div>
+
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/profile}">
+                        <i class="fas fa-fw fa-user"></i>
+                        <span th:text="#{html.sidebar.link.profile}"></span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/logout}">
+                        <i class="fas fa-fw fa-sign-out-alt"></i>
+                        <span th:text="#{html.sidebar.link.logout}"></span>
+                    </a>
+                </li>
+            </th:block>
+
+            <th:block sec:authorize="hasAuthority('ADMIN')">
+                <hr class="sidebar-divider">
+
+                <div class="sidebar-heading" th:text="#{html.sidebar.header.administration}"></div>
+
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/admin}">
+                        <i class="fas fa-fw fa-chart-area"></i>
+                        <span th:text="#{html.sidebar.link.admin}"></span></a>
+                </li>
+            </th:block>
+
+            <th:block sec:authorize="isAnonymous()">
+                <hr class="sidebar-divider">
+
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/login}">
+                        <i class="fas fa-fw fa-sign-in-alt"></i>
+                        <span th:text="#{html.sidebar.link.login}"></span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/register}">
+                        <i class="fas fa-fw fa-user-plus"></i>
+                        <span th:text="#{html.sidebar.link.register}"></span>
+                    </a>
+                </li>
+            </th:block>
+        </ul>
+    </body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="https://www.thymeleaf.org"
+      th:replace="~{fragments/layouts/base :: layout(~{::title}, ~{::section}, ~{})}">
+<head>
+    <title th:text="#{html.projects.title}"></title>
+</head>
+<body>
+<section>
+    <h1 class="h3 mb-2 text-gray-800 mt-4 mb-4" th:text="#{html.projects.header}"></h1>
+
+    <div class="row">
+        <div class="col">
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <div class="card-text">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" th:text="#{html.forms.name}"></th>
+                                        <th scope="col" th:text="#{html.forms.description}"></th>
+                                        <th scope="col" th:text="#{html.forms.tasks}"></th>
+                                        <th scope="col" th:text="#{html.rolesProject.owner}"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:if="!${projects.size()}">
+                                        <td th:text="#{html.misc.none}"></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr th:each="proj : ${projects}" role="row">
+                                        <td><a th:href="@{|/project/${proj.getKey().getId()}/|}" th:text="${proj.getKey().getName()}"></a></td>
+                                        <td th:text="${proj.getKey().getDescription()}"></td>
+                                        <td th:text="${proj.getKey().getTasks().size()}"></td>
+                                        <td><a th:href="@{|/profile/${proj.getValue().getUserName()}/|}" th:text="${proj.getValue().getUserName()}"></a></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <th:block sec:authorize="isAuthenticated()">
+                        <a th:href="@{/project/create}" class="btn btn-primary" th:text="#{html.home.create.project}"></a>
+                    </th:block>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+</body>
+</html>

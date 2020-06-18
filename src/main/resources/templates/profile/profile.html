@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="https://www.thymeleaf.org"
+      th:replace="~{fragments/layouts/base :: layout(~{::title}, ~{::section}, ~{})}">
+<head>
+    <title th:text="#{html.profile.title(${credentials.getUserName()})}"></title>
+</head>
+<body>
+<section>
+    <div class="d-sm-flex align-items-center justify-content-between mb-4 mt-4">
+        <h1 class="h3 mb-0 text-gray-800" th:text="#{html.profile.header}"></h1>
+        <div class="btn-group">
+            <a th:if="${visitor.getRole().equals('ADMIN') || credentials.getId() == visitor.getId()}" th:href="@{|/profile/${credentials.getUserName()}/edit|}" class="d-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-edit fa-sm text-white-50"></i> <span th:text="#{html.profile.editProfile}"></span></a>
+            <a th:if="${visitor.getRole().equals('ADMIN')}" th:href="@{|/profile/${credentials.getUserName()}/delete|}" class="d-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-user-minus fa-sm text-white-50"></i> <span th:text="#{html.profile.deleteMember}"></span></a>
+        </div>
+    </div>
+
+    <h2 th:text="${credentials.getUserName()}"></h2>
+    <h4 class="mb-3" th:text="|${credentials.getUser().getFirstName()} ${credentials.getUser().getLastName()}|"></h4>
+    <p class="mb-1"><span th:text="#{html.profile.role}"></span>:
+        <span th:switch="${credentials.getRole()}">
+            <span th:case="ADMIN" th:text="#{html.roles.admin}"></span>
+            <span th:case="*" th:text="#{html.roles.default}"></span>
+        </span>
+    </p>
+    <p class="mb-1"><span th:text="#{html.profile.memberSince}"></span>: <span th:text="${{credentials.getCreationTimestamp()}}"></span></p>
+    <p class="mb-1"><span th:text="#{html.profile.lastUpdate}"></span>: <span th:text="${{credentials.getLastUpdateTimestamp()}}"></span></p>
+
+    <div class="row mt-3">
+        <div class="col-xl-6 col-md-6 mb-4">
+            <div class="card border-left-primary h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1" th:text="#{html.profile.ownedProjects}"></div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800" th:text="${credentials.getUser().getOwnedProjects().size()}"></div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-project-diagram fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-6 col-md-6 mb-4">
+            <div class="card border-left-info h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1" th:text="#{html.profile.sharedProjects}"></div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800" th:text="${credentials.getUser().getVisibleProjects().size()}"></div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-users fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary" th:text="#{html.profile.projects}"></h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col" th:text="#{html.forms.name}"></th>
+                                    <th scope="col" th:text="#{html.forms.description}"></th>
+                                    <th scope="col" th:text="#{html.forms.role}"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:if="(${credentials.getUser().getOwnedProjects().size()} + ${credentials.getUser().getVisibleProjects().size()}) == 0">
+                                    <td th:text="#{html.misc.none}"></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr th:each="proj : ${credentials.getUser().getOwnedProjects()}" role="row">
+                                    <td><a th:href="@{|/project/${proj.getId()}|}" th:text="${proj.getName()}"></a></td>
+                                    <td th:text="${proj.getDescription()}"></td>
+                                    <td th:text="#{html.rolesProject.owner}"></td>
+                                </tr>
+                                <tr th:each="proj : ${credentials.getUser().getVisibleProjects()}" role="row">
+                                    <td><a th:href="@{|/project/${proj.getId()}|}" th:text="${proj.getName()}"></a></td>
+                                    <td th:text="${proj.getDescription()}"></td>
+                                    <td th:text="#{html.rolesProject.member}"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>

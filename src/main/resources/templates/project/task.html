@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="https://www.thymeleaf.org"
+      th:replace="~{fragments/layouts/base :: layout(~{::title}, ~{::section}, ~{})}">
+<head>
+    <title th:text="${found} ? #{html.project.task.title(${task.getName()})} : #{html.project.task.title.notfound}"></title>
+</head>
+<body>
+<section>
+    <div th:if="!${found}">
+        <div class="d-sm-flex align-items-center justify-content-between mb-4 mt-4">
+            <h1 class="h3 mb-0 text-gray-800" th:text="#{html.project.task.header.notfound}"></h1>
+        </div>
+    </div>
+    <div th:if="${found}">
+        <div class="d-sm-flex align-items-center justify-content-between mb-4 mt-4">
+            <h1 class="h3 mb-0 text-gray-800" th:text="#{html.project.task.header}"></h1>
+            <div class="btn-group">
+                <a th:href="@{|/project/${project.getId()}/|}" class="d-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-chevron-left fa-sm text-white-50"></i> <span th:text="#{html.project.task.back}"></span></a>
+                <th:block th:if="${visitor.getRole().equals('ADMIN') || visitor.getUser().getId() == project.getOwner().getId()}">
+                    <a th:href="${task.isCompleted()}? @{|/project/${project.getId()}/task/${task.getId()}/markUncompleted|} : @{|/project/${project.getId()}/task/${task.getId()}/markCompleted|}" class="d-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-check fa-sm text-white-50"></i> <span th:text="${task.isCompleted()}? #{html.project.task.markUncompleted} : #{html.project.task.markCompleted}"></span></a>
+                    <a th:href="@{|/project/${project.getId()}/task/${task.getId()}/edit|}" class="d-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-edit fa-sm text-white-50"></i> <span th:text="#{html.project.task.editTask}"></span></a>
+                    <a th:href="@{|/project/${project.getId()}/task/${task.getId()}/delete|}" class="d-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-trash-alt fa-sm text-white-50"></i> <span th:text="#{html.project.task.deleteTask}"></span></a>
+                </th:block>
+            </div>
+        </div>
+
+        <h2 th:text="${task.getName()}"></h2>
+        <h4 class="mb-3" th:text="${task.getDescription()}"></h4>
+        <p class="mb-1"><span th:text="#{html.forms.assignedTo}"></span>:
+            <span th:if="!${assignedTo}" th:text="#{html.misc.none}"></span>
+            <a th:if="${assignedTo}" th:href="@{|/profile/${assignedTo.getUserName()}/|}" th:text="${assignedTo.getUserName()}"></a>
+        </p>
+        <p class="mb-1" th:text="|#{html.project.task.created}: ${{task.getCreationTimestamp()}}|"></p>
+        <p class="mb-1" th:text="|#{html.project.task.lastUpdate}: ${{task.getLastUpdateTimestamp()}}|"></p>
+
+        <div class="row mt-3">
+            <div class="col-12">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary" th:text="#{html.project.task.comments}"></h6>
+                    </div>
+                    <div class="card-body table-responsive">
+                        <th:block th:each="comment : ${comments}">
+                            <div class="card mb-2">
+                                <div class="card-body">
+                                    <h5 class="card-title"><a th:href="@{|/profile/${comment.getKey().getUserName()}/|}" th:text="${comment.getKey().getUserName()}"></a></h5>
+                                    <h6 class="card-subtitle mb-2 text-muted" th:text="${{comment.getValue().getCreationTimestamp()}}"></h6>
+                                    <p class="card-text" th:text="${comment.getValue().getText()}"></p>
+                                    <a th:if="${visitor.getRole().equals('ADMIN') || visitor.getUser().getId() == project.getOwner().getId()}" th:href="@{|/project/${project.getId()}/task/${task.getId()}/comment/${comment.getValue().getId()}/delete|}" class="card-link" th:text="#{html.project.task.comments.delete}"></a>
+                                </div>
+                            </div>
+                        </th:block>
+
+                        <div th:if="${project.getOwner().equals(visitor.getUser()) || project.getMembers().contains(visitor.getUser())}" class="mt-4">
+                            <form th:action="@{|/project/${project.getId()}/task/${task.getId()}/comment/add|}" method="post">
+                                <div class="form-group">
+                                    <label for="text" th:text="#{html.project.task.comments.write}"></label>
+                                   <textarea class="form-control" name="text" id="text" rows=3 th:placeholder="#{html.project.task.comments.textarea}"></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary" th:text="#{html.project.task.comments.send}"></button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>

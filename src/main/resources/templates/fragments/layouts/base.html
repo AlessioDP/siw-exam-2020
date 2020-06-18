@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="https://www.thymeleaf.org"
+      th:fragment="layout (title, content, scripts)">
+    <head>
+        <th:block th:replace="fragments/header :: headerStart"></th:block>
+
+        <title th:replace="${title}">Title</title>
+
+        <th:block th:replace="fragments/header :: headerEnd"></th:block>
+    </head>
+    <body>
+        <div id="wrapper">
+            <div th:replace="fragments/sidebar :: sidebar"></div>
+
+            <div id="content-wrapper" class="d-flex flex-column">
+                <div id="content">
+                    <div class="container-fluid">
+                        <div th:replace="${content}">
+
+                        </div>
+                    </div>
+                </div>
+
+                <footer class="sticky-footer bg-white">
+                    <div class="container my-auto">
+                        <div class="copyright text-center my-auto">
+                            <span th:text="#{html.credits}"></span>
+                        </div>
+                    </div>
+                </footer>
+            </div>
+        </div>
+
+        <th:block th:replace="fragments/body :: bodyEnd"></th:block>
+
+        <th:block th:replace="${scripts}"></th:block>
+    </body>
+</html>

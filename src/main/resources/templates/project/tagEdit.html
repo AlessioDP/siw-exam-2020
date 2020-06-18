@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="https://www.thymeleaf.org"
+      th:replace="~{fragments/layouts/base :: layout(~{::title}, ~{::section}, ~{::scripts})}">
+<head>
+    <title th:text="${editing} ? #{html.project.tag.edit.title(${tag.getName()})} : #{html.project.tag.edit.title.create}"></title>
+</head>
+<body>
+<section>
+    <div class="d-sm-flex align-items-center justify-content-between mb-4 mt-4">
+        <h1 class="h3 mb-0 text-gray-800" th:text="${editing} ? #{html.project.tag.edit.header(${tag.getName()})} : #{html.project.tag.edit.header.create}"></h1>
+    </div>
+
+    <form th:action="${editing} ?  @{|/project/${project.getId()}/tag/${tag.getId()}/edit|} : @{|/project/${project.getId()}/tag/create|}" method="post">
+        <div class="form-group">
+            <label for="name" th:text="#{html.forms.name}"></label>
+            <input type="text" class="form-control" id="name" name="name" th:field="${tagForm.name}" th:placeholder="#{html.forms.name}">
+            <div class="alert alert-danger" th:if="${#fields.hasErrors('tagForm.name')}" th:errors="${tagForm.name}"></div>
+        </div>
+        <div class="form-group">
+            <label for="description" th:text="#{html.forms.description}"></label>
+            <input type="text" class="form-control" id="description" name="description" th:field="${tagForm.description}" th:placeholder="#{html.forms.description}">
+            <div class="alert alert-danger" th:if="${#fields.hasErrors('tagForm.description')}" th:errors="${tagForm.description}"></div>
+        </div>
+        <div class="form-group" id="colorpicker">
+            <label for="color" th:text="#{html.forms.color}"></label>
+            <div class="input-group">
+                <input type="text" class="input-lg" id="color" name="color" th:field="${tagForm.color}" th:placeholder="#{html.forms.color.explain}">
+                <span class="input-group-append">
+                    <span class="input-group-text colorpicker-input-addon"><i></i></span>
+                </span>
+            </div>
+            <div class="alert alert-danger" th:if="${#fields.hasErrors('tagForm.color')}" th:errors="${tagForm.color}"></div>
+        </div>
+        <button type="submit" class="btn btn-primary" th:text="${editing} ? #{html.project.tag.edit.submit.save} : #{html.project.tag.edit.submit.create}"></button>
+    </form>
+</section>
+<div th:fragment="scripts">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap-colorpicker.min.css}">
+    <script src="https://unpkg.com/@popperjs/core@2" crossorigin="anonymous"></script>
+    <script th:src="@{/js/bootstrap-colorpicker.min.js}"></script>
+    <script>
+        $(function () {
+            $('#colorpicker').colorpicker();
+        })
+    </script>
+</div>
+</body>
+</html>

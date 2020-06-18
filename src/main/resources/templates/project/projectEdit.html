@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="https://www.thymeleaf.org"
+      th:replace="~{fragments/layouts/base :: layout(~{::title}, ~{::section}, ~{})}">
+<head>
+    <title th:text="${editing} ? #{html.project.edit.title(${projectForm.getName()})} : #{html.project.edit.title.create}"></title>
+</head>
+<body>
+<section>
+    <div class="d-sm-flex align-items-center justify-content-between mb-4 mt-4">
+        <h1 class="h3 mb-0 text-gray-800" th:text="${editing} ? #{html.project.edit.header(${projectForm.getName()})} : #{html.project.edit.header.create}"></h1>
+    </div>
+
+    <form th:action="${editing} ? @{|/project/${projectForm.getId()}/edit|} : @{|/project/create|}" method="post">
+        <div class="form-group">
+            <label for="name" th:text="#{html.forms.name}"></label>
+            <input type="text" class="form-control" id="name" name="name" th:field="${projectForm.name}" th:placeholder="#{html.forms.name}">
+            <div class="alert alert-danger" th:if="${#fields.hasErrors('projectForm.name')}" th:errors="${projectForm.name}"></div>
+        </div>
+        <div class="form-group">
+            <label for="description" th:text="#{html.forms.description}"></label>
+            <input type="text" class="form-control" id="description" name="description" th:field="${projectForm.description}" th:placeholder="#{html.forms.description}">
+            <div class="alert alert-danger" th:if="${#fields.hasErrors('projectForm.description')}" th:errors="${projectForm.description}"></div>
+        </div>
+        <button type="submit" class="btn btn-primary" th:text="${editing} ? #{html.project.edit.submit.save} : #{html.project.edit.submit.create}"></button>
+    </form>
+</section>
+</body>
+</html>

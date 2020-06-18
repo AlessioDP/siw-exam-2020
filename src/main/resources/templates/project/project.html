@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="https://www.thymeleaf.org"
+      th:replace="~{fragments/layouts/base :: layout(~{::title}, ~{::section}, ~{})}">
+<head>
+    <title th:text="${project} ? #{html.project.title(${project.getName()})} : #{html.project.title.notfound}"></title>
+</head>
+<body>
+<section>
+    <div th:if="!${project}">
+        <div class="d-sm-flex align-items-center justify-content-between mb-4 mt-4">
+            <h1 class="h3 mb-0 text-gray-800" th:text="#{html.project.header.notfound}"></h1>
+        </div>
+    </div>
+    <div th:if="${project}">
+        <div class="d-sm-flex align-items-center justify-content-between mb-4 mt-4">
+            <h1 class="h3 mb-0 text-gray-800" th:text="#{html.project.header}"></h1>
+            <div class="btn-group" th:if="${visitor.getRole().equals('ADMIN') || visitor.getUser().getId() == project.getOwner().getId()}">
+                <a th:href="@{|/project/${project.getId()}/share|}" class="d-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-share-alt fa-sm text-white-50"></i> <span th:text="#{html.project.shareSettings}"></span></a>
+                <a th:href="@{|/project/${project.getId()}/edit|}" class="d-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-edit fa-sm text-white-50"></i> <span th:text="#{html.project.editProject}"></span></a>
+                <a th:href="@{|/project/${project.getId()}/delete|}" class="d-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-trash-alt fa-sm text-white-50"></i> <span th:text="#{html.project.deleteProject}"></span></a>
+            </div>
+        </div>
+
+        <h2 th:text="${project.getName()}"></h2>
+        <h4 class="mb-3" th:text="${project.getDescription()}"></h4>
+        <p class="mb-1"><span th:text="#{html.rolesProject.owner}"></span>: <a th:href="@{|/profile/${owner.getUserName()}/|}" th:text="${owner.getUserName()}"></a></p>
+        <div class="mb-1">
+            <ul class="list-inline member-list">
+                <li class="list-inline-item" th:text="#{html.rolesProject.members} + ': ' + (${members.size()}? '' : #{html.misc.none})"></li>
+                <li class="list-inline-item" th:each="member : ${members}"><a th:href="@{|/profile/${member.getId()}/|}" th:text="${member.getUserName()}"></a></li>
+            </ul>
+        </div>
+
+        <th:block th:if="${visitor.getRole().equals('ADMIN') || visitor.getUser().getId() == project.getOwner().getId() || project.getMembers().contains(visitor.getUser())}">
+
+            <p class="mb-1" th:text="|#{html.project.created}: ${{project.getCreationTimestamp()}}|"></p>
+            <p class="mb-1" th:text="|#{html.project.lastUpdate}: ${{project.getLastUpdateTimestamp()}}|"></p>
+
+            <div class="row mt-3">
+                <div class="col-12">
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary" th:text="#{html.project.tasks}"></h6>
+                        </div>
+                        <div class="card-body table-responsive">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th th:text="#{html.forms.name}"></th>
+                                    <th th:text="#{html.forms.description}"></th>
+                                    <th th:text="#{html.forms.assignedTo}"></th>
+                                    <th th:text="#{html.forms.completed}"></th>
+                                    <th th:text="#{html.forms.operations}" th:if="${visitor.getRole().equals('ADMIN') || visitor.getUser().getId() == project.getOwner().getId()}"></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:if="!${tasks.size()}">
+                                    <td th:text="#{html.misc.none}"></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td th:if="${visitor.getRole().equals('ADMIN') || visitor.getUser().getId() == project.getOwner().getId()}"></td>
+                                </tr>
+                                <th:block th:each="task : ${tasks}">
+                                    <tr>
+                                        <td><a th:href="@{|/project/${project.getId()}/task/${task.getId()}/|}" th:text="${task.getName()}"></a></td>
+                                        <td th:text="${task.getDescription()}"></td>
+                                        <td th:text="${credentialsRepository.findByUser(task.getUser()).isPresent()} ? ${credentialsRepository.findByUser(task.getUser()).get().getUserName()} : '-'"></td>
+                                        <td th:text="${task.isCompleted()}  ? #{html.misc.yes} : #{html.misc.no}"></td>
+                                        <td th:if="${visitor.getRole().equals('ADMIN') || visitor.getUser().getId() == project.getOwner().getId()}">
+                                            <a class="btn btn-primary btn-sm" th:href="@{|/project/${project.getId()}/task/${task.getId()}/edit|}" th:text="#{html.misc.edit}"></a>
+                                            <a class="btn btn-secondary btn-sm" th:href="@{|/project/${project.getId()}/task/${task.getId()}/delete|}" th:text="#{html.misc.delete}"></a>
+                                        </td>
+                                    </tr>
+                                    <tr th:if="${task.getTags().size()}">
+                                        <td colspan=4 class="border-top-0 padding-top-0">
+                                            <th:block th:each="tag : ${task.getTags()}">
+                                                <span class="badge badge-bigger badge-primary border border-dark" th:style="|background-color:${tag.getColor()};|" th:text="${tag.getName()}"></span>
+                                            </th:block>
+                                        </td>
+                                    </tr>
+                                </th:block>
+                                </tbody>
+                            </table>
+                            <a class="btn btn-primary mt-3" th:href="@{|/project/${project.getId()}/task/create|}" th:text="#{html.project.tasks.add}" th:if="${visitor.getRole().equals('ADMIN') || visitor.getUser().getId() == project.getOwner().getId()}"></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-3" th:if="${visitor.getRole().equals('ADMIN') || visitor.getUser().getId() == project.getOwner().getId()}">
+                <div class="col-12">
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary" th:text="#{html.project.tags}"></h6>
+                        </div>
+                        <div class="card-body table-responsive">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th th:text="#{html.forms.name}"></th>
+                                    <th th:text="#{html.forms.description}"></th>
+                                    <th th:text="#{html.forms.color}"></th>
+                                    <th th:text="#{html.forms.operations}"></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:if="!${tags.size()}">
+                                    <td th:text="#{html.misc.none}"></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <th:block th:each="tag : ${tags}">
+                                    <tr>
+                                        <td th:text="${tag.getName()}"></td>
+                                        <td th:text="${tag.getDescription()}"></td>
+                                        <td th:text="${tag.getColor()}"></td>
+                                        <td>
+                                            <a class="btn btn-primary btn-sm" th:href="@{|/project/${project.getId()}/tag/${tag.getId()}/edit|}" th:text="#{html.misc.edit}"></a>
+                                            <a class="btn btn-secondary btn-sm" th:href="@{|/project/${project.getId()}/tag/${tag.getId()}/delete|}" th:text="#{html.misc.delete}"></a>
+                                        </td>
+                                    </tr>
+                                </th:block>
+                                </tbody>
+                            </table>
+                            <a class="btn btn-primary mt-3" th:href="@{|/project/${project.getId()}/tag/create|}" th:text="#{html.project.tags.add}"></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </th:block>
+    </div>
+</section>
+</body>
+</html>

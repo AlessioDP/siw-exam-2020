@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="https://www.thymeleaf.org"
+      th:replace="~{fragments/layouts/base :: layout(~{::title}, ~{::section}, ~{})}">
+<head>
+    <title th:text="#{html.home.title}"></title>
+</head>
+<body>
+<section>
+    <h1 class="h3 mb-2 text-gray-800 mt-4 mb-4" th:text="#{html.home.header}"></h1>
+
+    <div class="row">
+        <div class="col">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary" th:text="#{html.profile.ownedProjects}"></h6>
+                </div>
+                <div class="card-body">
+                    <div class="card-text">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" th:text="#{html.forms.name}"></th>
+                                        <th scope="col" th:text="#{html.forms.description}"></th>
+                                        <th scope="col" th:text="#{html.forms.tasks}"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:if="${ownedProjects.size()} == 0">
+                                        <td th:text="#{html.misc.none}"></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr th:each="proj : ${ownedProjects}" role="row">
+                                        <td><a th:href="@{|/project/${proj.getId()}/|}" th:text="${proj.getName()}"></a></td>
+                                        <td th:text="${proj.getDescription()}"></td>
+                                        <td th:text="${proj.getTasks().size()}"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <a th:href="@{/project/create}" class="btn btn-primary" th:text="#{html.home.create.project}"></a>
+                </div>
+            </div>
+        </div>
+        <div class="col" th:if="${visibleProjects.size()}">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary" th:text="#{html.profile.sharedProjects}"></h6>
+                </div>
+                <div class="card-body">
+                    <div class="card-text">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" th:text="#{html.forms.name}"></th>
+                                        <th scope="col" th:text="#{html.forms.description}"></th>
+                                        <th scope="col" th:text="#{html.forms.tasks}"></th>
+                                        <th scope="col" th:text="#{html.rolesProject.owner}"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="visibleProject : ${visibleProjects}" role="row">
+                                        <td><a th:href="@{|/project/${visibleProject.getKey().getId()}/|}" th:text="${visibleProject.getKey().getName()}"></a></td>
+                                        <td th:text="${visibleProject.getKey().getDescription()}"></td>
+                                        <td th:text="${visibleProject.getKey().getTasks().size()}"></td>
+                                        <td><a th:href="@{|/profile/${visibleProject.getValue().getUserName()}/|}" th:text="${visibleProject.getValue().getUserName()}"></a></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+</body>
+</html>

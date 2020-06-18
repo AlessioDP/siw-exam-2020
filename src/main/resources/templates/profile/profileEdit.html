@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="https://www.thymeleaf.org"
+      th:replace="~{fragments/layouts/base :: layout(~{::title}, ~{::section}, ~{})}">
+<head>
+    <title th:text="#{html.profileEdit.title(${credentials.getUserName()})}"></title>
+</head>
+<body>
+<section>
+    <div class="d-sm-flex align-items-center justify-content-between mb-4 mt-4">
+        <h1 class="h3 mb-0 text-gray-800" th:text="#{html.profileEdit.header(${credentials.getUserName()})}"></h1>
+    </div>
+
+    <form th:action="@{|/profile/${credentials.getUserName()}/edit|}" method="post">
+        <div class="form-group">
+            <label for="firstName" th:text="#{html.forms.firstName}"></label>
+            <input type="text" class="form-control" id="firstName" name="firstName" th:field="${userForm.firstName}" placeholder="First name">
+            <div class="alert alert-danger" th:if="${#fields.hasErrors('userForm.firstName')}" th:errors="${userForm.firstName}"></div>
+        </div>
+        <div class="form-group">
+            <label for="lastName" th:text="#{html.forms.lastName}"></label>
+            <input type="text" class="form-control" id="lastName" name="lastName" th:field="${userForm.lastName}" placeholder="Last name">
+            <div class="alert alert-danger" th:if="${#fields.hasErrors('userForm.lastName')}" th:errors="${userForm.lastName}"></div>
+        </div>
+        <div class="form-group" th:if="${visitor.getRole().equals('ADMIN')}">
+            <label for="role" th:text="#{html.forms.role}"></label>
+            <select class="custom-select" id="role" name="role" th:field="${credentialsForm.role}">
+                <option value="DEFAULT" th:selected="${credentialsForm.getRole()} == 'DEFAULT'" th:text="#{html.roles.default}"></option>
+                <option value="ADMIN" th:selected="${credentialsForm.getRole()} == 'ADMIN'" th:text="#{html.roles.admin}"></option>
+            </select>
+            <div class="alert alert-danger" th:if="${#fields.hasErrors('credentialsForm.role')}" th:errors="${credentialsForm.role}"></div>
+        </div>
+        <button type="submit" class="btn btn-primary" th:text="#{html.profileEdit.save}"></button>
+    </form>
+</section>
+</body>
+</html>
